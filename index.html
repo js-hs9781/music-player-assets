@@ -1,540 +1,501 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #6d6d6d; -webkit-text-stroke: #6d6d6d}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #1443ae; -webkit-text-stroke: #1443ae}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #12737e; -webkit-text-stroke: #12737e}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #a20010; -webkit-text-stroke: #a20010}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #4d5055; -webkit-text-stroke: #4d5055}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #2e3133; -webkit-text-stroke: #2e3133}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #2e3133; -webkit-text-stroke: #2e3133; min-height: 15.0px}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #137646; -webkit-text-stroke: #137646}
-    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #6103ad; -webkit-text-stroke: #6103ad}
-    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #ba0673; -webkit-text-stroke: #ba0673}
-    p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Menlo; color: #18191b; -webkit-text-stroke: #18191b}
-    span.s1 {font-kerning: none; background-color: #f6f7f9}
-    span.s2 {font-kerning: none; color: #fb0007; background-color: #f6f7f9; -webkit-text-stroke: 0px #fb0007}
-    span.s3 {font-kerning: none; color: #2a2a2a; background-color: #f6f7f9; -webkit-text-stroke: 0px #2a2a2a}
-    span.s4 {font-kerning: none; color: #2e3133; background-color: #f6f7f9; -webkit-text-stroke: 0px #2e3133}
-    span.s5 {font-kerning: none; color: #1443ae; background-color: #f6f7f9; -webkit-text-stroke: 0px #1443ae}
-    span.s6 {font-kerning: none; color: #a20010; background-color: #f6f7f9; -webkit-text-stroke: 0px #a20010}
-    span.s7 {font-kerning: none; color: #12737e; background-color: #f6f7f9; -webkit-text-stroke: 0px #12737e}
-    span.s8 {font-kerning: none; color: #6103ad; background-color: #f6f7f9; -webkit-text-stroke: 0px #6103ad}
-    span.s9 {font-kerning: none; color: #093c94; background-color: #f6f7f9; -webkit-text-stroke: 0px #093c94}
-    span.s10 {font-kerning: none; color: #4d5055; background-color: #f6f7f9; -webkit-text-stroke: 0px #4d5055}
-    span.s11 {font-kerning: none; color: #137646; background-color: #f6f7f9; -webkit-text-stroke: 0px #137646}
-    span.s12 {font-kerning: none}
-    span.s13 {font-kerning: none; color: #ba0673; background-color: #f6f7f9; -webkit-text-stroke: 0px #ba0673}
-    span.s14 {font-kerning: none; color: #18191b; background-color: #f6f7f9; -webkit-text-stroke: 0px #18191b}
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
+  <style>
+    /* === 全局響應式設定 === */
+    body { 
+      font-family: 'Segoe UI', sans-serif; 
+      background: #121212; 
+      color: white; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; /* 垂直置中 */
+      margin: 0; 
+      padding: 10px; 
+      min-height: 100vh; /* 確保佔滿整個視窗 */
+      box-sizing: border-box;
+      overflow: hidden; /* 防止捲動 */
+    }
+    
+    h1 { 
+      margin: 0 0 15px 0; 
+      font-size: clamp(18px, 5vw, 24px); /* 字體隨螢幕變大 */
+      color: #00ffcc; 
+      text-shadow: 0 0 10px rgba(0,255,204,0.3); 
+      text-align: center;
+    }
+    
+    /* === 響應式主容器 === */
+    #container { 
+      position: relative; 
+      width: 100%;             /* 手機上佔滿寬度 */
+      max-width: 640px;        /* 電腦上最大寬度 */
+      aspect-ratio: 4/3;       /* 強制維持 4:3 比例，避免變形 */
+      max-height: 70vh;        /* 高度不超過視窗的 70% */
+      
+      margin-top: 10px; 
+      border: 2px solid #333; 
+      border-radius: 15px; 
+      overflow: hidden; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+      background: #000;
+    }
+    
+    /* 隱藏鏡頭但保留功能 */
+    video { 
+        width: 100%; height: 100%; 
+        transform: scaleX(-1); 
+        object-fit: cover; 
+        opacity: 0; /* 透明 */
+        position: absolute; top: 0; left: 0;
+    }
+    
+    /* 封面圖 */
+    #bg-cover { 
+      position: absolute; top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      opacity: 1.0; 
+      z-index: 0; 
+      pointer-events: none; 
+      object-fit: cover; 
+      transition: opacity 1s;
+    }
+
+    canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform: scaleX(-1); pointer-events: none; z-index: 10; }
+
+    /* UI 資訊面板 (響應式調整) */
+    #overlay-ui { 
+      position: absolute; 
+      top: 15px; right: 15px; 
+      z-index: 20; 
+      text-align: right; 
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    
+    .status-box { 
+      background: rgba(0, 0, 0, 0.6); 
+      padding: 8px 12px; 
+      border-radius: 8px; 
+      border-left: 4px solid #00ffcc;
+      margin-bottom: 6px; 
+      backdrop-filter: blur(3px);
+      min-width: 80px; /* 防止太窄 */
+    }
+    
+    .big-text { font-size: 20px; font-weight: bold; color: #fff; }
+    .label { font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 1px;}
+    
+    /* 按鈕與讀取文字 */
+    #controls { margin-bottom: 10px; display: flex; flex-direction: column; gap: 10px; align-items: center; z-index: 50;}
+    
+    button { 
+      padding: 12px 30px; 
+      background: linear-gradient(45deg, #008CBA, #005f7f); 
+      color: white; border: none; border-radius: 30px; 
+      cursor: pointer; 
+      font-size: 16px; font-weight: bold;
+      transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 140, 186, 0.4);
+      white-space: nowrap;
+    }
+    button:active { transform: scale(0.95); }
+    
+    #loading-text { color: #ffeb3b; font-weight: bold; font-size: 14px; display: none; text-align: center; }
+    
+    /* 底部說明文字 */
+    #instructions { 
+      margin-top: 15px; 
+      font-size: 12px; 
+      color: #888; 
+      text-align: center; 
+      width: 90%;
+      line-height: 1.6;
+    }
+    .key-point { color: #00ffcc; font-weight: bold; margin: 0 3px; display: inline-block;}
+    
+    /* 防誤觸提示 */
+    #protection-msg {
+        position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+        color: #ffcc00; font-weight: bold; font-size: 14px; 
+        background: rgba(0,0,0,0.7); padding: 8px 15px; border-radius: 20px;
+        display: none; z-index: 30; white-space: nowrap;
+    }
+
+    /* === 手機版特別調整 (螢幕寬度小於 600px 時觸發) === */
+    @media (max-width: 600px) {
+      .big-text { font-size: 16px; }
+      .label { font-size: 9px; }
+      .status-box { padding: 5px 10px; margin-bottom: 4px; }
+      h1 { font-size: 20px; margin-bottom: 10px; }
+      
+      /* 手機上按鈕大一點比較好按 */
+      button { padding: 10px 25px; font-size: 15px; }
+      
+      /* 說明文字縮小 */
+      #instructions { font-size: 11px; }
+    }
   </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s1">html</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">base</span><span class="s4"> </span><span class="s1">target</span><span class="s3">=</span><span class="s6">"_top"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">meta</span><span class="s4"> </span><span class="s7">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s4"> </span><span class="s7">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">script</span><span class="s4"> </span><span class="s7">src</span><span class="s3">=</span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"</span><span class="s4"> </span><span class="s7">crossorigin</span><span class="s3">=</span><span class="s1">"anonymous"</span><span class="s3">&gt;&lt;/</span><span class="s5">script</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* === 全局響應式設定 === */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s8">body</span><span class="s1"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">font-family:</span><span class="s4"> </span><span class="s1">'Segoe UI'</span><span class="s4">, </span><span class="s1">sans-serif</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">background:</span><span class="s4"> </span><span class="s9">#121212</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">color:</span><span class="s1"> </span><span class="s6">white</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">display:</span><span class="s1"> </span><span class="s6">flex</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">flex-direction:</span><span class="s4"> </span><span class="s6">column</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">align-items:</span><span class="s4"> </span><span class="s6">center</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">justify-content:</span><span class="s4"> </span><span class="s6">center</span><span class="s4">; </span><span class="s10">/* 垂直置中 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">margin:</span><span class="s1"> </span><span class="s11">0</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">padding:</span><span class="s1"> </span><span class="s11">10px</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">min-height:</span><span class="s4"> </span><span class="s11">100vh</span><span class="s4">; </span><span class="s1">/* 確保佔滿整個視窗 */</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">box-sizing:</span><span class="s4"> </span><span class="s6">border-box</span><span class="s4">;</span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">overflow:</span><span class="s4"> </span><span class="s6">hidden</span><span class="s4">; </span><span class="s1">/* 防止捲動 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s8">h1</span><span class="s1"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">margin:</span><span class="s1"> </span><span class="s11">0</span><span class="s1"> </span><span class="s11">0</span><span class="s1"> </span><span class="s11">15px</span><span class="s1"> </span><span class="s11">0</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">font-size:</span><span class="s1"> </span><span class="s6">clamp(</span><span class="s11">18px</span><span class="s1">, </span><span class="s11">5vw</span><span class="s1">, </span><span class="s11">24px</span><span class="s6">)</span><span class="s1">; </span><span class="s10">/* 字體隨螢幕變大 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">color:</span><span class="s1"> </span><span class="s9">#00ffcc</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p8"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">text-shadow:</span><span class="s4"> </span><span class="s1">0</span><span class="s4"> </span><span class="s1">0</span><span class="s4"> </span><span class="s1">10px</span><span class="s4"> </span><span class="s6">rgba(</span><span class="s1">0</span><span class="s4">,</span><span class="s1">255</span><span class="s4">,</span><span class="s1">204</span><span class="s4">,</span><span class="s1">0.3</span><span class="s6">)</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">text-align:</span><span class="s4"> </span><span class="s6">center</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* === 響應式主容器 === */</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">#container</span><span class="s4"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">position:</span><span class="s1"> </span><span class="s6">relative</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">width:</span><span class="s1"> </span><span class="s11">100%</span><span class="s1">; <span class="Apple-converted-space">            </span></span><span class="s10">/* 手機上佔滿寬度 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">max-width:</span><span class="s1"> </span><span class="s11">640px</span><span class="s1">;<span class="Apple-converted-space">        </span></span><span class="s10">/* 電腦上最大寬度 */</span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">aspect-ratio:</span><span class="s4"> </span><span class="s11">4</span><span class="s4">/</span><span class="s11">3</span><span class="s4">; <span class="Apple-converted-space">      </span></span><span class="s1">/* 強制維持 4:3 比例，避免變形 */</span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">max-height:</span><span class="s4"> </span><span class="s11">70vh</span><span class="s4">;<span class="Apple-converted-space">        </span></span><span class="s1">/* 高度不超過視窗的 70% */</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">margin-top:</span><span class="s4"> </span><span class="s11">10px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">border:</span><span class="s1"> </span><span class="s11">2px</span><span class="s1"> </span><span class="s6">solid</span><span class="s1"> </span><span class="s9">#333</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s11">15px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">overflow:</span><span class="s1"> </span><span class="s6">hidden</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">box-shadow:</span><span class="s1"> </span><span class="s11">0</span><span class="s1"> </span><span class="s11">10px</span><span class="s1"> </span><span class="s11">40px</span><span class="s1"> </span><span class="s6">rgba(</span><span class="s11">0</span><span class="s1">,</span><span class="s11">0</span><span class="s1">,</span><span class="s11">0</span><span class="s1">,</span><span class="s11">0.6</span><span class="s6">)</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">background:</span><span class="s4"> </span><span class="s9">#000</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* 隱藏鏡頭但保留功能 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s8">video</span><span class="s1"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">width:</span><span class="s1"> </span><span class="s11">100%</span><span class="s1">; </span><span class="s7">height:</span><span class="s1"> </span><span class="s11">100%</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">transform:</span><span class="s1"> </span><span class="s6">scaleX(</span><span class="s11">-1</span><span class="s6">)</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">object-fit:</span><span class="s1"> </span><span class="s6">cover</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">opacity:</span><span class="s1"> </span><span class="s11">0</span><span class="s1">; </span><span class="s10">/* 透明 */</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">position:</span><span class="s4"> </span><span class="s6">absolute</span><span class="s4">; </span><span class="s1">top:</span><span class="s4"> </span><span class="s11">0</span><span class="s4">; </span><span class="s1">left:</span><span class="s4"> </span><span class="s11">0</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* 封面圖 */</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">#bg-cover</span><span class="s4"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">position:</span><span class="s4"> </span><span class="s6">absolute</span><span class="s4">; </span><span class="s1">top:</span><span class="s4"> </span><span class="s11">0</span><span class="s4">; </span><span class="s1">left:</span><span class="s4"> </span><span class="s11">0</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">width:</span><span class="s4"> </span><span class="s11">100%</span><span class="s4">; </span><span class="s1">height:</span><span class="s4"> </span><span class="s11">100%</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">opacity:</span><span class="s1"> </span><span class="s11">1.0</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">z-index:</span><span class="s1"> </span><span class="s11">0</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">pointer-events:</span><span class="s4"> </span><span class="s6">none</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">object-fit:</span><span class="s4"> </span><span class="s6">cover</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">transition:</span><span class="s4"> </span><span class="s6">opacity</span><span class="s4"> </span><span class="s11">1s</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s8">canvas</span><span class="s4"> { </span><span class="s1">position:</span><span class="s4"> </span><span class="s6">absolute</span><span class="s4">; </span><span class="s1">left:</span><span class="s4"> </span><span class="s11">0</span><span class="s4">; </span><span class="s1">top:</span><span class="s4"> </span><span class="s11">0</span><span class="s4">; </span><span class="s1">width:</span><span class="s4"> </span><span class="s11">100%</span><span class="s4">; </span><span class="s1">height:</span><span class="s4"> </span><span class="s11">100%</span><span class="s4">; </span><span class="s1">transform:</span><span class="s4"> </span><span class="s6">scaleX(</span><span class="s11">-1</span><span class="s6">)</span><span class="s4">; </span><span class="s1">pointer-events:</span><span class="s4"> </span><span class="s6">none</span><span class="s4">; </span><span class="s1">z-index:</span><span class="s4"> </span><span class="s11">10</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* UI 資訊面板 (響應式調整) */</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">#overlay-ui</span><span class="s4"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">position:</span><span class="s1"> </span><span class="s6">absolute</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">top:</span><span class="s1"> </span><span class="s11">15px</span><span class="s1">; </span><span class="s7">right:</span><span class="s1"> </span><span class="s11">15px</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">z-index:</span><span class="s1"> </span><span class="s11">20</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">text-align:</span><span class="s4"> </span><span class="s6">right</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">pointer-events:</span><span class="s4"> </span><span class="s6">none</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">display:</span><span class="s1"> </span><span class="s6">flex</span><span class="s1">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">flex-direction:</span><span class="s4"> </span><span class="s6">column</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">align-items:</span><span class="s4"> </span><span class="s6">flex-end</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">.status-box</span><span class="s4"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">background:</span><span class="s1"> </span><span class="s6">rgba(</span><span class="s11">0</span><span class="s1">, </span><span class="s11">0</span><span class="s1">, </span><span class="s11">0</span><span class="s1">, </span><span class="s11">0.6</span><span class="s6">)</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">padding:</span><span class="s1"> </span><span class="s11">8px</span><span class="s1"> </span><span class="s11">12px</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s11">8px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">border-left:</span><span class="s4"> </span><span class="s11">4px</span><span class="s4"> </span><span class="s6">solid</span><span class="s4"> </span><span class="s9">#00ffcc</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">margin-bottom:</span><span class="s4"> </span><span class="s11">6px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">backdrop-filter:</span><span class="s4"> </span><span class="s6">blur(</span><span class="s11">3px</span><span class="s6">)</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">min-width:</span><span class="s4"> </span><span class="s11">80px</span><span class="s4">; </span><span class="s10">/* 防止太窄 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s8">.big-text</span><span class="s4"> { </span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">20px</span><span class="s4">; </span><span class="s1">font-weight:</span><span class="s4"> </span><span class="s6">bold</span><span class="s4">; </span><span class="s1">color:</span><span class="s4"> </span><span class="s9">#fff</span><span class="s4">; }</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s8">.label</span><span class="s4"> { </span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">10px</span><span class="s4">; </span><span class="s1">color:</span><span class="s4"> </span><span class="s9">#bbb</span><span class="s4">; </span><span class="s1">text-transform:</span><span class="s4"> </span><span class="s6">uppercase</span><span class="s4">; </span><span class="s1">letter-spacing:</span><span class="s4"> </span><span class="s11">1px</span><span class="s4">;}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* 按鈕與讀取文字 */</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s8">#controls</span><span class="s4"> { </span><span class="s1">margin-bottom:</span><span class="s4"> </span><span class="s11">10px</span><span class="s4">; </span><span class="s1">display:</span><span class="s4"> </span><span class="s6">flex</span><span class="s4">; </span><span class="s1">flex-direction:</span><span class="s4"> </span><span class="s6">column</span><span class="s4">; </span><span class="s1">gap:</span><span class="s4"> </span><span class="s11">10px</span><span class="s4">; </span><span class="s1">align-items:</span><span class="s4"> </span><span class="s6">center</span><span class="s4">; </span><span class="s1">z-index:</span><span class="s4"> </span><span class="s11">50</span><span class="s4">;}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s8">button</span><span class="s1"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">padding:</span><span class="s1"> </span><span class="s11">12px</span><span class="s1"> </span><span class="s11">30px</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s7">background:</span><span class="s4"> </span><span class="s1">linear-gradient(</span><span class="s11">45deg</span><span class="s4">, </span><span class="s9">#008CBA</span><span class="s4">, </span><span class="s9">#005f7f</span><span class="s1">)</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">color:</span><span class="s4"> </span><span class="s6">white</span><span class="s4">; </span><span class="s1">border:</span><span class="s4"> </span><span class="s6">none</span><span class="s4">; </span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s11">30px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">cursor:</span><span class="s1"> </span><span class="s6">pointer</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">16px</span><span class="s4">; </span><span class="s1">font-weight:</span><span class="s4"> </span><span class="s6">bold</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">transition:</span><span class="s4"> </span><span class="s11">0.3s</span><span class="s4">; </span><span class="s1">box-shadow:</span><span class="s4"> </span><span class="s11">0</span><span class="s4"> </span><span class="s11">4px</span><span class="s4"> </span><span class="s11">15px</span><span class="s4"> </span><span class="s6">rgba(</span><span class="s11">0</span><span class="s4">, </span><span class="s11">140</span><span class="s4">, </span><span class="s11">186</span><span class="s4">, </span><span class="s11">0.4</span><span class="s6">)</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">white-space:</span><span class="s4"> </span><span class="s6">nowrap</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">button:active</span><span class="s4"> { </span><span class="s7">transform:</span><span class="s4"> </span><span class="s6">scale(</span><span class="s11">0.95</span><span class="s6">)</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s8">#loading-text</span><span class="s4"> { </span><span class="s1">color:</span><span class="s4"> </span><span class="s9">#ffeb3b</span><span class="s4">; </span><span class="s1">font-weight:</span><span class="s4"> </span><span class="s6">bold</span><span class="s4">; </span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">14px</span><span class="s4">; </span><span class="s1">display:</span><span class="s4"> </span><span class="s6">none</span><span class="s4">; </span><span class="s1">text-align:</span><span class="s4"> </span><span class="s6">center</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* 底部說明文字 */</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">#instructions</span><span class="s4"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">margin-top:</span><span class="s4"> </span><span class="s11">15px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">12px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">color:</span><span class="s1"> </span><span class="s9">#888</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">text-align:</span><span class="s4"> </span><span class="s6">center</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s7">width:</span><span class="s1"> </span><span class="s11">90%</span><span class="s1">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">line-height:</span><span class="s4"> </span><span class="s11">1.6</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s8">.key-point</span><span class="s4"> { </span><span class="s1">color:</span><span class="s4"> </span><span class="s9">#00ffcc</span><span class="s4">; </span><span class="s1">font-weight:</span><span class="s4"> </span><span class="s6">bold</span><span class="s4">; </span><span class="s1">margin:</span><span class="s4"> </span><span class="s11">0</span><span class="s4"> </span><span class="s11">3px</span><span class="s4">; </span><span class="s1">display:</span><span class="s4"> </span><span class="s6">inline-block</span><span class="s4">;}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* 防誤觸提示 */</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">#protection-msg</span><span class="s4"> {</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">position:</span><span class="s4"> </span><span class="s6">absolute</span><span class="s4">; </span><span class="s1">bottom:</span><span class="s4"> </span><span class="s11">20px</span><span class="s4">; </span><span class="s1">left:</span><span class="s4"> </span><span class="s11">50%</span><span class="s4">; </span><span class="s1">transform:</span><span class="s4"> </span><span class="s6">translateX(</span><span class="s11">-50%</span><span class="s6">)</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">color:</span><span class="s4"> </span><span class="s9">#ffcc00</span><span class="s4">; </span><span class="s1">font-weight:</span><span class="s4"> </span><span class="s6">bold</span><span class="s4">; </span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">14px</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">background:</span><span class="s4"> </span><span class="s6">rgba(</span><span class="s11">0</span><span class="s4">,</span><span class="s11">0</span><span class="s4">,</span><span class="s11">0</span><span class="s4">,</span><span class="s11">0.7</span><span class="s6">)</span><span class="s4">; </span><span class="s1">padding:</span><span class="s4"> </span><span class="s11">8px</span><span class="s4"> </span><span class="s11">15px</span><span class="s4">; </span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s11">20px</span><span class="s4">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">display:</span><span class="s4"> </span><span class="s6">none</span><span class="s4">; </span><span class="s1">z-index:</span><span class="s4"> </span><span class="s11">30</span><span class="s4">; </span><span class="s1">white-space:</span><span class="s4"> </span><span class="s6">nowrap</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">/* === 手機版特別調整 (螢幕寬度小於 600px 時觸發) === */</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span>@</span><span class="s1">media</span><span class="s4"> (</span><span class="s1">max-width:</span><span class="s4"> 600</span><span class="s1">px</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span>.big-text { </span><span class="s7">font-size:</span><span class="s1"> </span><span class="s11">16px</span><span class="s1">; }</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s8">.label</span><span class="s1"> { </span><span class="s7">font-size:</span><span class="s1"> </span><span class="s11">9px</span><span class="s1">; }</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s8">.status-box</span><span class="s4"> { </span><span class="s1">padding:</span><span class="s4"> </span><span class="s11">5px</span><span class="s4"> </span><span class="s11">10px</span><span class="s4">; </span><span class="s1">margin-bottom:</span><span class="s4"> </span><span class="s11">4px</span><span class="s4">; }</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s8">h1</span><span class="s4"> { </span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">20px</span><span class="s4">; </span><span class="s1">margin-bottom:</span><span class="s4"> </span><span class="s11">10px</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">/* 手機上按鈕大一點比較好按 */</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s8">button</span><span class="s4"> { </span><span class="s1">padding:</span><span class="s4"> </span><span class="s11">10px</span><span class="s4"> </span><span class="s11">25px</span><span class="s4">; </span><span class="s1">font-size:</span><span class="s4"> </span><span class="s11">15px</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">/* 說明文字縮小 */</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s8">#instructions</span><span class="s1"> { </span><span class="s7">font-size:</span><span class="s1"> </span><span class="s11">11px</span><span class="s1">; }</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">h1</span><span class="s3">&gt;</span><span class="s1">🎵 AI 手勢音樂播放器</span><span class="s3">&lt;/</span><span class="s5">h1</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"controls"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">button</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"startBtn"</span><span class="s4"> </span><span class="s7">onclick</span><span class="s3">=</span><span class="s1">"startApp()"</span><span class="s3">&gt;</span><span class="s4">🔊 點此啟動體驗</span><span class="s3">&lt;/</span><span class="s5">button</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s1"> </span><span class="s7">id</span><span class="s3">=</span><span class="s6">"loading-text"</span><span class="s3">&gt;</span><span class="s1">⏳ AI 模型載入中...</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"container"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">img</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"bg-cover"</span><span class="s4"> </span><span class="s7">src</span><span class="s3">=</span><span class="s1">""</span><span class="s4"> </span><span class="s7">alt</span><span class="s3">=</span><span class="s1">"Cover Art"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">video</span><span class="s4"> </span><span class="s1">id</span><span class="s3">=</span><span class="s6">"webcam"</span><span class="s4"> </span><span class="s1">autoplay</span><span class="s4"> </span><span class="s1">playsinline</span><span class="s3">&gt;&lt;/</span><span class="s5">video</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">canvas</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"output_canvas"</span><span class="s3">&gt;&lt;/</span><span class="s5">canvas</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s1"> </span><span class="s7">id</span><span class="s3">=</span><span class="s6">"protection-msg"</span><span class="s3">&gt;</span><span class="s1">🛡️ 防誤觸保護中...</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"overlay-ui"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">class</span><span class="s3">=</span><span class="s1">"status-box"</span><span class="s4"> </span><span class="s7">style</span><span class="s3">=</span><span class="s1">"border-color: #ff5555;"</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"box-status"</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"label"</span><span class="s3">&gt;</span><span class="s1">Status</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"play-status"</span><span class="s4"> </span><span class="s7">class</span><span class="s3">=</span><span class="s1">"big-text"</span><span class="s4"> </span><span class="s7">style</span><span class="s3">=</span><span class="s1">"color: #ff5555;"</span><span class="s3">&gt;</span><span class="s4">Ready</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">class</span><span class="s3">=</span><span class="s1">"status-box"</span><span class="s4"> </span><span class="s7">style</span><span class="s3">=</span><span class="s1">"border-color: #00ffcc;"</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"label"</span><span class="s3">&gt;</span><span class="s1">Volume</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"vol-display"</span><span class="s4"> </span><span class="s7">class</span><span class="s3">=</span><span class="s1">"big-text"</span><span class="s3">&gt;</span><span class="s4">50%</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">class</span><span class="s3">=</span><span class="s1">"status-box"</span><span class="s4"> </span><span class="s7">style</span><span class="s3">=</span><span class="s1">"border-color: #ffcc00;"</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"label"</span><span class="s3">&gt;</span><span class="s1">Track</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"song-name"</span><span class="s4"> </span><span class="s7">style</span><span class="s3">=</span><span class="s1">"font-size: 14px; font-weight: bold;"</span><span class="s3">&gt;</span><span class="s4">-</span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s5">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">div</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"instructions"</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>手勢: </span><span class="s3">&lt;</span><span class="s5">span</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"key-point"</span><span class="s3">&gt;</span><span class="s1">👌 OK</span><span class="s3">&lt;/</span><span class="s5">span</span><span class="s3">&gt;</span><span class="s1">播放 | </span><span class="s3">&lt;</span><span class="s5">span</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"key-point"</span><span class="s3">&gt;</span><span class="s1">✊ 握拳</span><span class="s3">&lt;/</span><span class="s5">span</span><span class="s3">&gt;</span><span class="s1">暫停 </span><span class="s3">&lt;</span><span class="s5">br</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s5">span</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"key-point"</span><span class="s3">&gt;</span><span class="s1">☝️ 食指</span><span class="s3">&lt;/</span><span class="s5">span</span><span class="s3">&gt;</span><span class="s1">下一首 | </span><span class="s3">&lt;</span><span class="s5">span</span><span class="s1"> </span><span class="s7">class</span><span class="s3">=</span><span class="s6">"key-point"</span><span class="s3">&gt;</span><span class="s1">🖐 手掌高度</span><span class="s3">&lt;/</span><span class="s5">span</span><span class="s3">&gt;</span><span class="s1">音量</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s5">audio</span><span class="s4"> </span><span class="s7">id</span><span class="s3">=</span><span class="s1">"audioPlayer"</span><span class="s4"> </span><span class="s7">controls</span><span class="s4"> </span><span class="s7">style</span><span class="s3">=</span><span class="s1">"display:none;"</span><span class="s4"> </span><span class="s7">preload</span><span class="s3">=</span><span class="s1">"auto"</span><span class="s4"> </span><span class="s7">crossorigin</span><span class="s3">=</span><span class="s1">"anonymous"</span><span class="s3">&gt;&lt;/</span><span class="s5">audio</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p4"><span class="s3">&lt;</span><span class="s5">script</span><span class="s4"> </span><span class="s7">type</span><span class="s3">=</span><span class="s1">"module"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s5">import</span><span class="s4"> { </span><span class="s13">FilesetResolver</span><span class="s4">, </span><span class="s13">HandLandmarker</span><span class="s4"> } </span><span class="s5">from</span><span class="s4"> </span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0"</span><span class="s4">;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 🔧 GitHub 資源設定區</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p10"><span class="s5">const</span><span class="s4"> </span><span class="s1">CONFIG</span><span class="s4"> = {</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s14">coverUrl</span><span class="s4">: </span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/final%20cover.png"</span><span class="s4">,<span class="Apple-converted-space"> </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">musicList</span><span class="s4">: [</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music1.mp3"</span><span class="s4">,</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music2.mp3"</span><span class="s4">,</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music3.mp3"</span><span class="s4">,</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music4.mp3"</span><span class="s4">,</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music5.mp3"</span><span class="s4">,</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">"https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music6.mp3"</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>]</span></p>
-<p class="p6"><span class="s1">};</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 核心變數</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">handLandmarker</span><span class="s4"> = </span><span class="s5">undefined</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">runningMode</span><span class="s4"> = </span><span class="s6">"VIDEO"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">lastVideoTime</span><span class="s4"> = -</span><span class="s7">1</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">isPlaying</span><span class="s4"> = </span><span class="s5">false</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">currentVolume</span><span class="s4"> = </span><span class="s7">0.5</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">smoothedVolume</span><span class="s4"> = </span><span class="s7">0.5</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">currentSongIndex</span><span class="s4"> = </span><span class="s7">0</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">lastGestureTime</span><span class="s4"> = </span><span class="s7">0</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">pauseProtectionTime</span><span class="s4"> = </span><span class="s7">0</span><span class="s4">; </span><span class="s10">// 防誤觸時間</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">audioInitialized</span><span class="s4"> = </span><span class="s5">false</span><span class="s4">;</span></p>
-<p class="p11"><span class="s5">let</span><span class="s4"> </span><span class="s1">frameCounter</span><span class="s4"> = </span><span class="s7">0</span><span class="s4">;</span></p>
-<p class="p10"><span class="s5">const</span><span class="s4"> </span><span class="s1">SKIP_FRAMES</span><span class="s4"> = </span><span class="s7">2</span><span class="s4">;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s5">const</span><span class="s4"> </span><span class="s1">video</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"webcam"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s5">const</span><span class="s4"> </span><span class="s1">canvasElement</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"output_canvas"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s5">const</span><span class="s4"> </span><span class="s1">canvasCtx</span><span class="s4"> = </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">getContext</span><span class="s4">(</span><span class="s6">"2d"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s5">const</span><span class="s4"> </span><span class="s1">audioPlayer</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"audioPlayer"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s5">const</span><span class="s4"> </span><span class="s1">bgCover</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"bg-cover"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s5">const</span><span class="s4"> </span><span class="s1">protectionMsg</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"protection-msg"</span><span class="s4">);</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// 設定封面圖</span></p>
-<p class="p11"><span class="s1">bgCover</span><span class="s4">.</span><span class="s1">src</span><span class="s4"> = </span><span class="s13">CONFIG</span><span class="s4">.</span><span class="s1">coverUrl</span><span class="s4">;</span></p>
-<p class="p11"><span class="s1">bgCover</span><span class="s4">.</span><span class="s1">onerror</span><span class="s4"> = </span><span class="s5">function</span><span class="s4">() {</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">this</span><span class="s4">.</span><span class="s14">src</span><span class="s4"> = </span><span class="s1">"https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&amp;q=80"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1">};</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">addEventListener</span><span class="s4">(</span><span class="s6">'error'</span><span class="s4">, </span><span class="s5">function</span><span class="s4">(</span><span class="s1">e</span><span class="s4">) {</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s14">console</span><span class="s4">.</span><span class="s14">error</span><span class="s4">(</span><span class="s1">"Audio Error:"</span><span class="s4">, </span><span class="s14">e</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">isPlaying</span><span class="s4"> = </span><span class="s5">false</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">updateStatusUI</span><span class="s4">();</span></p>
-<p class="p6"><span class="s1">});</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 1. 初始化 AI 模型</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p11"><span class="s5">async</span><span class="s4"> </span><span class="s5">function</span><span class="s4"> </span><span class="s1">createHandLandmarker</span><span class="s4">() {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">loadingText</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"loading-text"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">startBtn</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"startBtn"</span><span class="s4">);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">loadingText</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">display</span><span class="s4"> = </span><span class="s6">"block"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">startBtn</span><span class="s4">.</span><span class="s1">disabled</span><span class="s4"> = </span><span class="s5">true</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">startBtn</span><span class="s4">.</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s6">"載入中..."</span><span class="s4">;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span></span><span class="s5">try</span><span class="s1"> {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">vision</span><span class="s4"> = </span><span class="s5">await</span><span class="s4"> </span><span class="s13">FilesetResolver</span><span class="s4">.</span><span class="s1">forVisionTasks</span><span class="s4">(</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">handLandmarker</span><span class="s4"> = </span><span class="s5">await</span><span class="s4"> </span><span class="s13">HandLandmarker</span><span class="s4">.</span><span class="s1">createFromOptions</span><span class="s4">(</span><span class="s1">vision</span><span class="s4">, {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">baseOptions</span><span class="s4">: {</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s14">modelAssetPath</span><span class="s4">: </span><span class="s1">`https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`</span><span class="s4">,</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s14">delegate</span><span class="s1">: </span><span class="s6">"GPU"</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span>},</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">runningMode</span><span class="s4">: </span><span class="s1">runningMode</span><span class="s4">,</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s14">numHands</span><span class="s1">: </span><span class="s7">1</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">loadingText</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">display</span><span class="s4"> = </span><span class="s6">"none"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">startBtn</span><span class="s4">.</span><span class="s1">disabled</span><span class="s4"> = </span><span class="s5">false</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">startBtn</span><span class="s4">.</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s6">"🔊 點此啟動體驗"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>} </span><span class="s5">catch</span><span class="s1"> (</span><span class="s14">e</span><span class="s1">) {</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s14">alert</span><span class="s4">(</span><span class="s1">"AI 模型載入失敗: "</span><span class="s4"> + </span><span class="s14">e</span><span class="s4">);</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p11"><span class="s1">createHandLandmarker</span><span class="s4">();</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 2. 音樂播放邏輯</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p11"><span class="s5">function</span><span class="s4"> </span><span class="s1">playNextSong</span><span class="s4">() {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s13">CONFIG</span><span class="s4">.</span><span class="s1">musicList</span><span class="s4">.</span><span class="s1">length</span><span class="s4"> === </span><span class="s7">0</span><span class="s4">) </span><span class="s5">return</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">currentSongIndex</span><span class="s4"> = (</span><span class="s1">currentSongIndex</span><span class="s4"> + </span><span class="s7">1</span><span class="s4">) % </span><span class="s13">CONFIG</span><span class="s4">.</span><span class="s1">musicList</span><span class="s4">.</span><span class="s1">length</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">url</span><span class="s4"> = </span><span class="s13">CONFIG</span><span class="s4">.</span><span class="s1">musicList</span><span class="s4">[</span><span class="s1">currentSongIndex</span><span class="s4">];</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">src</span><span class="s4"> = </span><span class="s1">url</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">volume</span><span class="s4"> = </span><span class="s1">currentVolume</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">playPromise</span><span class="s4"> = </span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">play</span><span class="s4">();</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span></span><span class="s5">if</span><span class="s1"> (</span><span class="s14">playPromise</span><span class="s1"> !== </span><span class="s5">undefined</span><span class="s1">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">playPromise</span><span class="s4">.</span><span class="s1">then</span><span class="s4">(</span><span class="s1">_</span><span class="s4"> =&gt; {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s14">isPlaying</span><span class="s1"> = </span><span class="s5">true</span><span class="s1">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">updateStatusUI</span><span class="s4">();</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}).</span><span class="s5">catch</span><span class="s1">(</span><span class="s14">error</span><span class="s1"> =&gt; { </span><span class="s14">console</span><span class="s1">.</span><span class="s14">error</span><span class="s1">(</span><span class="s6">"Auto-play prevented:"</span><span class="s1">, </span><span class="s14">error</span><span class="s1">); });</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"song-name"</span><span class="s4">).</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s6">`Track #</span><span class="s4">${</span><span class="s1">currentSongIndex</span><span class="s4"> + </span><span class="s7">1</span><span class="s4">}</span><span class="s6">`</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">onended</span><span class="s4"> = () =&gt; </span><span class="s1">playNextSong</span><span class="s4">();</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 3. 啟動與權限</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p11"><span class="s1">window</span><span class="s4">.</span><span class="s1">startApp</span><span class="s4"> = </span><span class="s5">function</span><span class="s4">() {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">if</span><span class="s4"> (!</span><span class="s1">handLandmarker</span><span class="s4">) </span><span class="s5">return</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">if</span><span class="s4"> (!</span><span class="s1">audioInitialized</span><span class="s4"> &amp;&amp; </span><span class="s13">CONFIG</span><span class="s4">.</span><span class="s1">musicList</span><span class="s4">.</span><span class="s1">length</span><span class="s4"> &gt; </span><span class="s7">0</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">src</span><span class="s4"> = </span><span class="s13">CONFIG</span><span class="s4">.</span><span class="s1">musicList</span><span class="s4">[</span><span class="s7">0</span><span class="s4">];</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">volume</span><span class="s4"> = </span><span class="s7">0</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">play</span><span class="s4">().</span><span class="s1">then</span><span class="s4">(() =&gt; {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">pause</span><span class="s4">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">currentTime</span><span class="s4"> = </span><span class="s7">0</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">volume</span><span class="s4"> = </span><span class="s1">currentVolume</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s1">audioInitialized</span><span class="s4"> = </span><span class="s5">true</span><span class="s4">;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s14">console</span><span class="s4">.</span><span class="s14">log</span><span class="s4">(</span><span class="s1">"Audio Unlocked"</span><span class="s4">);</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span>}).</span><span class="s5">catch</span><span class="s1">(</span><span class="s14">e</span><span class="s1"> =&gt; </span><span class="s14">console</span><span class="s1">.</span><span class="s14">log</span><span class="s1">(</span><span class="s6">"Unlock skipped:"</span><span class="s1">, </span><span class="s14">e</span><span class="s1">));</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">// 響應式攝影機設定：使用 ideal 來適應不同裝置</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">constraints</span><span class="s4"> = {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span></span><span class="s14">video</span><span class="s1">: {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">          </span></span><span class="s14">facingMode</span><span class="s1">: </span><span class="s6">"user"</span><span class="s1">,</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">          </span></span><span class="s14">width</span><span class="s1">: { </span><span class="s14">ideal</span><span class="s1">: </span><span class="s7">640</span><span class="s1"> },</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">          </span></span><span class="s14">height</span><span class="s1">: { </span><span class="s14">ideal</span><span class="s1">: </span><span class="s7">480</span><span class="s1"> }</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>};</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">navigator</span><span class="s4">.</span><span class="s1">mediaDevices</span><span class="s4">.</span><span class="s1">getUserMedia</span><span class="s4">(</span><span class="s1">constraints</span><span class="s4">).</span><span class="s1">then</span><span class="s4">((</span><span class="s1">stream</span><span class="s4">) =&gt; {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">video</span><span class="s4">.</span><span class="s1">srcObject</span><span class="s4"> = </span><span class="s1">stream</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">video</span><span class="s4">.</span><span class="s1">addEventListener</span><span class="s4">(</span><span class="s6">"loadeddata"</span><span class="s4">, </span><span class="s1">predictWebcam</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"startBtn"</span><span class="s4">).</span><span class="s1">style</span><span class="s4">.</span><span class="s1">display</span><span class="s4"> = </span><span class="s6">"none"</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"loading-text"</span><span class="s4">).</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s6">"啟動成功！請比出 OK 手勢"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"loading-text"</span><span class="s4">).</span><span class="s1">style</span><span class="s4">.</span><span class="s1">display</span><span class="s4"> = </span><span class="s6">"block"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 4. 偵測主迴圈</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p2"><span class="s1">async</span><span class="s4"> </span><span class="s1">function</span><span class="s4"> </span><span class="s14">predictWebcam</span><span class="s4">() {</span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">// 確保 Canvas 大小跟隨 Video 實際大小 (響應式關鍵)</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">video</span><span class="s4">.</span><span class="s1">videoWidth</span><span class="s4"> &gt; </span><span class="s7">0</span><span class="s4"> &amp;&amp; </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">width</span><span class="s4"> !== </span><span class="s1">video</span><span class="s4">.</span><span class="s1">videoWidth</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">width</span><span class="s4"> = </span><span class="s1">video</span><span class="s4">.</span><span class="s1">videoWidth</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">height</span><span class="s4"> = </span><span class="s1">video</span><span class="s4">.</span><span class="s1">videoHeight</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span></span><span class="s5">if</span><span class="s1"> (</span><span class="s14">frameCounter</span><span class="s1"> % (</span><span class="s13">SKIP_FRAMES</span><span class="s1"> + </span><span class="s7">1</span><span class="s1">) === </span><span class="s7">0</span><span class="s1">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">      </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">lastVideoTime</span><span class="s4"> !== </span><span class="s1">video</span><span class="s4">.</span><span class="s1">currentTime</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">lastVideoTime</span><span class="s4"> = </span><span class="s1">video</span><span class="s4">.</span><span class="s1">currentTime</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">startTimeMs</span><span class="s4"> = </span><span class="s1">performance</span><span class="s4">.</span><span class="s1">now</span><span class="s4">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">results</span><span class="s4"> = </span><span class="s1">handLandmarker</span><span class="s4">.</span><span class="s1">detectForVideo</span><span class="s4">(</span><span class="s1">video</span><span class="s4">, </span><span class="s1">startTimeMs</span><span class="s4">);</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">clearRect</span><span class="s4">(</span><span class="s7">0</span><span class="s4">, </span><span class="s7">0</span><span class="s4">, </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">width</span><span class="s4">, </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">height</span><span class="s4">);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// 顯示防誤觸提示</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s13">Date</span><span class="s4">.</span><span class="s1">now</span><span class="s4">() &lt; </span><span class="s1">pauseProtectionTime</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">protectionMsg</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">display</span><span class="s4"> = </span><span class="s6">"block"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>} </span><span class="s5">else</span><span class="s1"> {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">protectionMsg</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">display</span><span class="s4"> = </span><span class="s6">"none"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">results</span><span class="s4">.</span><span class="s1">landmarks</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">          </span></span><span class="s5">for</span><span class="s4"> (</span><span class="s5">const</span><span class="s4"> </span><span class="s1">landmarks</span><span class="s4"> </span><span class="s5">of</span><span class="s4"> </span><span class="s1">results</span><span class="s4">.</span><span class="s1">landmarks</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">gestureState</span><span class="s4"> = </span><span class="s1">handleGestures</span><span class="s4">(</span><span class="s1">landmarks</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">drawHand</span><span class="s4">(</span><span class="s1">landmarks</span><span class="s4">, </span><span class="s1">gestureState</span><span class="s4">);<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">          </span>}</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">frameCounter</span><span class="s4">++;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">  </span></span><span class="s1">window</span><span class="s4">.</span><span class="s1">requestAnimationFrame</span><span class="s4">(</span><span class="s1">predictWebcam</span><span class="s4">);</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 5. 手勢判定邏輯 (含防誤觸)</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p11"><span class="s5">function</span><span class="s4"> </span><span class="s1">handleGestures</span><span class="s4">(</span><span class="s1">lm</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">now</span><span class="s1"> = </span><span class="s13">Date</span><span class="s1">.</span><span class="s14">now</span><span class="s1">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">let</span><span class="s4"> </span><span class="s1">gestureType</span><span class="s4"> = </span><span class="s6">"NORMAL"</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">thumbTip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">4</span><span class="s1">];</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">indexTip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">8</span><span class="s1">];</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">middleTip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">12</span><span class="s1">];</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">ringTip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">16</span><span class="s1">];</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">pinkyTip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">20</span><span class="s1">];</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">indexPip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">6</span><span class="s1">].</span><span class="s14">y</span><span class="s1">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">middlePip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">10</span><span class="s1">].</span><span class="s14">y</span><span class="s1">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">ringPip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">14</span><span class="s1">].</span><span class="s14">y</span><span class="s1">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">pinkyPip</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">18</span><span class="s1">].</span><span class="s14">y</span><span class="s1">;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">isIndexExt</span><span class="s4"> = </span><span class="s1">indexTip</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> &lt; </span><span class="s1">indexPip</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">isMiddleExt</span><span class="s4"> = </span><span class="s1">middleTip</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> &lt; </span><span class="s1">middlePip</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">isRingExt</span><span class="s4"> = </span><span class="s1">ringTip</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> &lt; </span><span class="s1">ringPip</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">isPinkyExt</span><span class="s4"> = </span><span class="s1">pinkyTip</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> &lt; </span><span class="s1">pinkyPip</span><span class="s4">;</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">distPinch</span><span class="s4"> = </span><span class="s13">Math</span><span class="s4">.</span><span class="s1">hypot</span><span class="s4">(</span><span class="s1">thumbTip</span><span class="s4">.</span><span class="s1">x</span><span class="s4"> - </span><span class="s1">indexTip</span><span class="s4">.</span><span class="s1">x</span><span class="s4">, </span><span class="s1">thumbTip</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> - </span><span class="s1">indexTip</span><span class="s4">.</span><span class="s1">y</span><span class="s4">);</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- 握拳 (暫停) ---</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">isFist</span><span class="s4"> = (!</span><span class="s1">isIndexExt</span><span class="s4"> &amp;&amp; !</span><span class="s1">isMiddleExt</span><span class="s4"> &amp;&amp; !</span><span class="s1">isRingExt</span><span class="s4"> &amp;&amp; !</span><span class="s1">isPinkyExt</span><span class="s4">);</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s1"> (</span><span class="s14">isFist</span><span class="s1">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s14">gestureType</span><span class="s1"> = </span><span class="s6">"FIST"</span><span class="s1">;</span></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// 🛡️ 防誤觸檢查</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">now</span><span class="s4"> &lt; </span><span class="s1">pauseProtectionTime</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s5">return</span><span class="s1"> </span><span class="s14">gestureType</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">now</span><span class="s4"> - </span><span class="s1">lastGestureTime</span><span class="s4"> &gt; </span><span class="s7">800</span><span class="s4"> &amp;&amp; </span><span class="s1">isPlaying</span><span class="s4">) {<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">audioPlayer</span><span class="s1">.</span><span class="s14">pause</span><span class="s1">();</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">isPlaying</span><span class="s1"> = </span><span class="s5">false</span><span class="s1">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">updateStatusUI</span><span class="s1">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">lastGestureTime</span><span class="s4"> = </span><span class="s1">now</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">return</span><span class="s4"> </span><span class="s1">gestureType</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- 食指 (下一首) ---</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">isIndexPoint</span><span class="s4"> = </span><span class="s1">isIndexExt</span><span class="s4"> &amp;&amp; !</span><span class="s1">isMiddleExt</span><span class="s4"> &amp;&amp; !</span><span class="s1">isRingExt</span><span class="s4"> &amp;&amp; !</span><span class="s1">isPinkyExt</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">isIndexPoint</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s14">gestureType</span><span class="s1"> = </span><span class="s6">"INDEX"</span><span class="s1">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">now</span><span class="s4"> - </span><span class="s1">lastGestureTime</span><span class="s4"> &gt; </span><span class="s7">1500</span><span class="s4"> &amp;&amp; </span><span class="s1">isPlaying</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">playNextSong</span><span class="s1">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">pauseProtectionTime</span><span class="s4"> = </span><span class="s1">now</span><span class="s4"> + </span><span class="s7">1000</span><span class="s4">; </span><span class="s10">// 切歌後也保護 1 秒</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">lastGestureTime</span><span class="s4"> = </span><span class="s1">now</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">return</span><span class="s4"> </span><span class="s1">gestureType</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- OK (播放) ---</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">distPinch</span><span class="s4"> &lt; </span><span class="s7">0.05</span><span class="s4"> &amp;&amp; </span><span class="s1">isMiddleExt</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s14">gestureType</span><span class="s1"> = </span><span class="s6">"OK"</span><span class="s1">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s1"> (</span><span class="s14">now</span><span class="s1"> - </span><span class="s14">lastGestureTime</span><span class="s1"> &gt; </span><span class="s7">1000</span><span class="s1">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s5">if</span><span class="s1"> (!</span><span class="s14">isPlaying</span><span class="s1">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s5">if</span><span class="s1"> (!</span><span class="s14">audioPlayer</span><span class="s1">.</span><span class="s14">src</span><span class="s1">) </span><span class="s14">playNextSong</span><span class="s1">();<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s5">else</span><span class="s1"> </span><span class="s14">audioPlayer</span><span class="s1">.</span><span class="s14">play</span><span class="s1">();</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s14">isPlaying</span><span class="s1"> = </span><span class="s5">true</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s14">updateStatusUI</span><span class="s1">();</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s14">pauseProtectionTime</span><span class="s1"> = </span><span class="s14">now</span><span class="s1"> + </span><span class="s7">2000</span><span class="s1">; </span><span class="s10">// 🛡️ 啟動播放時，保護 2 秒</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">lastGestureTime</span><span class="s4"> = </span><span class="s1">now</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">return</span><span class="s4"> </span><span class="s1">gestureType</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">// --- 音量 (手掌高度) ---</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s1">isPlaying</span><span class="s4"> &amp;&amp; !</span><span class="s1">isFist</span><span class="s4"> &amp;&amp; !</span><span class="s1">isIndexPoint</span><span class="s4"> &amp;&amp; </span><span class="s1">distPinch</span><span class="s4"> &gt; </span><span class="s7">0.1</span><span class="s4">) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">palmY</span><span class="s1"> = </span><span class="s14">lm</span><span class="s1">[</span><span class="s7">9</span><span class="s1">].</span><span class="s14">y</span><span class="s1">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s5">let</span><span class="s1"> </span><span class="s14">targetVol</span><span class="s1"> = </span><span class="s7">1</span><span class="s1"> - </span><span class="s14">palmY</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s14">targetVol</span><span class="s1"> = (</span><span class="s14">targetVol</span><span class="s1"> - </span><span class="s7">0.2</span><span class="s1">) * </span><span class="s7">1.6</span><span class="s1">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">targetVol</span><span class="s4"> = </span><span class="s13">Math</span><span class="s4">.</span><span class="s1">max</span><span class="s4">(</span><span class="s7">0</span><span class="s4">, </span><span class="s13">Math</span><span class="s4">.</span><span class="s1">min</span><span class="s4">(</span><span class="s7">1</span><span class="s4">, </span><span class="s1">targetVol</span><span class="s4">));</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">smoothedVolume</span><span class="s4"> += (</span><span class="s1">targetVol</span><span class="s4"> - </span><span class="s1">smoothedVolume</span><span class="s4">) * </span><span class="s7">0.1</span><span class="s4">;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s13">Math</span><span class="s4">.</span><span class="s1">abs</span><span class="s4">(</span><span class="s1">currentVolume</span><span class="s4"> - </span><span class="s1">smoothedVolume</span><span class="s4">) &gt; </span><span class="s7">0.01</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">currentVolume</span><span class="s4"> = </span><span class="s1">smoothedVolume</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">audioPlayer</span><span class="s4">.</span><span class="s1">volume</span><span class="s4"> = </span><span class="s1">currentVolume</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"vol-display"</span><span class="s4">).</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s13">Math</span><span class="s4">.</span><span class="s1">round</span><span class="s4">(</span><span class="s1">currentVolume</span><span class="s4"> * </span><span class="s7">100</span><span class="s4">) + </span><span class="s6">"%"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">return</span><span class="s4"> </span><span class="s1">gestureType</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p11"><span class="s5">function</span><span class="s4"> </span><span class="s1">updateStatusUI</span><span class="s4">() {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">playStatus</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"play-status"</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">boxStatus</span><span class="s4"> = </span><span class="s1">document</span><span class="s4">.</span><span class="s1">getElementById</span><span class="s4">(</span><span class="s6">"box-status"</span><span class="s4">);</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s1"> (</span><span class="s14">isPlaying</span><span class="s1">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">playStatus</span><span class="s4">.</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s6">"Playing ▶"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">playStatus</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">color</span><span class="s4"> = </span><span class="s6">"#00ff00"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">boxStatus</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">borderColor</span><span class="s4"> = </span><span class="s6">"#00ff00"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>} </span><span class="s5">else</span><span class="s1"> {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">playStatus</span><span class="s4">.</span><span class="s1">innerText</span><span class="s4"> = </span><span class="s6">"Paused ⏸"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">playStatus</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">color</span><span class="s4"> = </span><span class="s6">"#ff5555"</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">boxStatus</span><span class="s4">.</span><span class="s1">style</span><span class="s4">.</span><span class="s1">borderColor</span><span class="s4"> = </span><span class="s6">"#ff5555"</span><span class="s4">;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p5"><span class="s1">// 6. 繪圖</span></p>
-<p class="p5"><span class="s1">// ==========================================</span></p>
-<p class="p11"><span class="s5">function</span><span class="s4"> </span><span class="s1">drawHand</span><span class="s4">(</span><span class="s1">landmarks</span><span class="s4">, </span><span class="s1">gestureType</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">lineWidth</span><span class="s4"> = </span><span class="s7">2</span><span class="s4">;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">let</span><span class="s4"> </span><span class="s14">mainColor</span><span class="s4"> = </span><span class="s1">"rgba(0, 255, 204, 0.6)"</span><span class="s4">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">let</span><span class="s1"> </span><span class="s14">tipColor</span><span class="s1"> = </span><span class="s6">"#00ffcc"</span><span class="s1">;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s14">gestureType</span><span class="s4"> === </span><span class="s1">"OK"</span><span class="s4">) { </span><span class="s14">mainColor</span><span class="s4"> = </span><span class="s1">"rgba(0, 255, 0, 0.8)"</span><span class="s4">; </span><span class="s14">tipColor</span><span class="s4"> = </span><span class="s1">"#00ff00"</span><span class="s4">; }</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s14">gestureType</span><span class="s4"> === </span><span class="s1">"FIST"</span><span class="s4">) { </span><span class="s14">mainColor</span><span class="s4"> = </span><span class="s1">"rgba(255, 85, 85, 0.8)"</span><span class="s4">; </span><span class="s14">tipColor</span><span class="s4"> = </span><span class="s1">"#ff5555"</span><span class="s4">; }</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">if</span><span class="s4"> (</span><span class="s14">gestureType</span><span class="s4"> === </span><span class="s1">"INDEX"</span><span class="s4">) { </span><span class="s14">mainColor</span><span class="s4"> = </span><span class="s1">"rgba(255, 204, 0, 0.8)"</span><span class="s4">; </span><span class="s14">tipColor</span><span class="s4"> = </span><span class="s1">"#ffcc00"</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">connections</span><span class="s1"> = [[</span><span class="s7">0</span><span class="s1">,</span><span class="s7">1</span><span class="s1">],[</span><span class="s7">1</span><span class="s1">,</span><span class="s7">2</span><span class="s1">],[</span><span class="s7">2</span><span class="s1">,</span><span class="s7">3</span><span class="s1">],[</span><span class="s7">3</span><span class="s1">,</span><span class="s7">4</span><span class="s1">], [</span><span class="s7">0</span><span class="s1">,</span><span class="s7">5</span><span class="s1">],[</span><span class="s7">5</span><span class="s1">,</span><span class="s7">6</span><span class="s1">],[</span><span class="s7">6</span><span class="s1">,</span><span class="s7">7</span><span class="s1">],[</span><span class="s7">7</span><span class="s1">,</span><span class="s7">8</span><span class="s1">], [</span><span class="s7">5</span><span class="s1">,</span><span class="s7">9</span><span class="s1">],[</span><span class="s7">9</span><span class="s1">,</span><span class="s7">10</span><span class="s1">],[</span><span class="s7">10</span><span class="s1">,</span><span class="s7">11</span><span class="s1">],[</span><span class="s7">11</span><span class="s1">,</span><span class="s7">12</span><span class="s1">], [</span><span class="s7">9</span><span class="s1">,</span><span class="s7">13</span><span class="s1">],[</span><span class="s7">13</span><span class="s1">,</span><span class="s7">14</span><span class="s1">],[</span><span class="s7">14</span><span class="s1">,</span><span class="s7">15</span><span class="s1">],[</span><span class="s7">15</span><span class="s1">,</span><span class="s7">16</span><span class="s1">], [</span><span class="s7">13</span><span class="s1">,</span><span class="s7">17</span><span class="s1">],[</span><span class="s7">17</span><span class="s1">,</span><span class="s7">18</span><span class="s1">],[</span><span class="s7">18</span><span class="s1">,</span><span class="s7">19</span><span class="s1">],[</span><span class="s7">19</span><span class="s1">,</span><span class="s7">20</span><span class="s1">], [</span><span class="s7">0</span><span class="s1">,</span><span class="s7">17</span><span class="s1">]];</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">strokeStyle</span><span class="s4"> = </span><span class="s1">mainColor</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s5">for</span><span class="s4"> (</span><span class="s5">const</span><span class="s4"> [</span><span class="s1">start</span><span class="s4">, </span><span class="s1">end</span><span class="s4">] </span><span class="s5">of</span><span class="s4"> </span><span class="s1">connections</span><span class="s4">) {</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s5">const</span><span class="s4"> </span><span class="s1">p1</span><span class="s4"> = </span><span class="s1">landmarks</span><span class="s4">[</span><span class="s1">start</span><span class="s4">];</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">p2</span><span class="s1"> = </span><span class="s14">landmarks</span><span class="s1">[</span><span class="s14">end</span><span class="s1">];</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">beginPath</span><span class="s4">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">moveTo</span><span class="s4">(</span><span class="s1">p1</span><span class="s4">.</span><span class="s1">x</span><span class="s4"> * </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">width</span><span class="s4">, </span><span class="s1">p1</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> * </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">height</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">lineTo</span><span class="s4">(</span><span class="s1">p2</span><span class="s4">.</span><span class="s1">x</span><span class="s4"> * </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">width</span><span class="s4">, </span><span class="s1">p2</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> * </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">height</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">stroke</span><span class="s4">();</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p7"><span class="s12"></span><br></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s5">for</span><span class="s1"> (</span><span class="s5">let</span><span class="s1"> </span><span class="s14">i</span><span class="s1"> = </span><span class="s7">0</span><span class="s1">; </span><span class="s14">i</span><span class="s1"> &lt; </span><span class="s14">landmarks</span><span class="s1">.</span><span class="s14">length</span><span class="s1">; </span><span class="s14">i</span><span class="s1">++) {</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s5">const</span><span class="s1"> </span><span class="s14">p</span><span class="s1"> = </span><span class="s14">landmarks</span><span class="s1">[</span><span class="s14">i</span><span class="s1">];</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">beginPath</span><span class="s4">();</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">arc</span><span class="s4">(</span><span class="s1">p</span><span class="s4">.</span><span class="s1">x</span><span class="s4"> * </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">width</span><span class="s4">, </span><span class="s1">p</span><span class="s4">.</span><span class="s1">y</span><span class="s4"> * </span><span class="s1">canvasElement</span><span class="s4">.</span><span class="s1">height</span><span class="s4">, </span><span class="s1">i</span><span class="s4"> % </span><span class="s7">4</span><span class="s4"> === </span><span class="s7">0</span><span class="s4"> ? </span><span class="s7">5</span><span class="s4"> : </span><span class="s7">3</span><span class="s4">, </span><span class="s7">0</span><span class="s4">, </span><span class="s7">2</span><span class="s4"> * </span><span class="s13">Math</span><span class="s4">.</span><span class="s13">PI</span><span class="s4">);</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">fillStyle</span><span class="s4"> = (</span><span class="s1">i</span><span class="s4"> === </span><span class="s7">4</span><span class="s4"> || </span><span class="s1">i</span><span class="s4"> === </span><span class="s7">8</span><span class="s4">) ? </span><span class="s1">tipColor</span><span class="s4"> : </span><span class="s1">mainColor</span><span class="s4">;</span></p>
-<p class="p11"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">canvasCtx</span><span class="s4">.</span><span class="s1">fill</span><span class="s4">();</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p6"><span class="s1">}</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
+
+  <h1>🎵 AI 手勢音樂播放器</h1>
+  
+  <div id="controls">
+    <button id="startBtn" onclick="startApp()">🔊 點此啟動體驗</button>
+    <div id="loading-text">⏳ AI 模型載入中...</div>
+  </div>
+
+  <div id="container">
+    <img id="bg-cover" src="" alt="Cover Art">
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="output_canvas"></canvas>
+    
+    <div id="protection-msg">🛡️ 防誤觸保護中...</div>
+
+    <div id="overlay-ui">
+      <div class="status-box" style="border-color: #ff5555;" id="box-status">
+        <div class="label">Status</div>
+        <div id="play-status" class="big-text" style="color: #ff5555;">Ready</div>
+      </div>
+      <div class="status-box" style="border-color: #00ffcc;">
+        <div class="label">Volume</div>
+        <div id="vol-display" class="big-text">50%</div>
+      </div>
+      <div class="status-box" style="border-color: #ffcc00;">
+        <div class="label">Track</div>
+        <div id="song-name" style="font-size: 14px; font-weight: bold;">-</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="instructions">
+    手勢: <span class="key-point">👌 OK</span>播放 | <span class="key-point">✊ 握拳</span>暫停 <br>
+    <span class="key-point">☝️ 食指</span>下一首 | <span class="key-point">🖐 手掌高度</span>音量
+  </div>
+
+  <audio id="audioPlayer" controls style="display:none;" preload="auto" crossorigin="anonymous"></audio>
+
+<script type="module">
+import { FilesetResolver, HandLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
+
+// ==========================================
+// 🔧 GitHub 資源設定區
+// ==========================================
+const CONFIG = {
+  coverUrl: "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/final%20cover.png", 
+  musicList: [
+    "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music1.mp3",
+    "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music2.mp3",
+    "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music3.mp3",
+    "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music4.mp3",
+    "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music5.mp3",
+    "https://raw.githubusercontent.com/js-hs9781/music-player-assets/main/Music6.mp3"
+  ]
+};
+
+// ==========================================
+// 核心變數
+// ==========================================
+let handLandmarker = undefined;
+let runningMode = "VIDEO";
+let lastVideoTime = -1;
+let isPlaying = false;
+let currentVolume = 0.5;
+let smoothedVolume = 0.5;
+let currentSongIndex = 0;
+let lastGestureTime = 0;
+let pauseProtectionTime = 0; // 防誤觸時間
+let audioInitialized = false;
+let frameCounter = 0;
+const SKIP_FRAMES = 2;
+
+const video = document.getElementById("webcam");
+const canvasElement = document.getElementById("output_canvas");
+const canvasCtx = canvasElement.getContext("2d");
+const audioPlayer = document.getElementById("audioPlayer");
+const bgCover = document.getElementById("bg-cover");
+const protectionMsg = document.getElementById("protection-msg");
+
+// 設定封面圖
+bgCover.src = CONFIG.coverUrl;
+bgCover.onerror = function() {
+    this.src = "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80";
+};
+
+audioPlayer.addEventListener('error', function(e) {
+    console.error("Audio Error:", e);
+    isPlaying = false;
+    updateStatusUI();
+});
+
+// ==========================================
+// 1. 初始化 AI 模型
+// ==========================================
+async function createHandLandmarker() {
+  const loadingText = document.getElementById("loading-text");
+  const startBtn = document.getElementById("startBtn");
+  
+  loadingText.style.display = "block";
+  startBtn.disabled = true;
+  startBtn.innerText = "載入中...";
+  
+  try {
+    const vision = await FilesetResolver.forVisionTasks(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
+    );
+    handLandmarker = await HandLandmarker.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+        delegate: "GPU"
+      },
+      runningMode: runningMode,
+      numHands: 1
+    });
+    
+    loadingText.style.display = "none";
+    startBtn.disabled = false;
+    startBtn.innerText = "🔊 點此啟動體驗";
+  } catch (e) {
+    alert("AI 模型載入失敗: " + e);
+  }
+}
+createHandLandmarker();
+
+// ==========================================
+// 2. 音樂播放邏輯
+// ==========================================
+function playNextSong() {
+  if (CONFIG.musicList.length === 0) return;
+  currentSongIndex = (currentSongIndex + 1) % CONFIG.musicList.length;
+  const url = CONFIG.musicList[currentSongIndex];
+  audioPlayer.src = url;
+  audioPlayer.volume = currentVolume;
+  const playPromise = audioPlayer.play();
+  if (playPromise !== undefined) {
+    playPromise.then(_ => {
+      isPlaying = true;
+      updateStatusUI();
+    }).catch(error => { console.error("Auto-play prevented:", error); });
+  }
+  document.getElementById("song-name").innerText = `Track #${currentSongIndex + 1}`;
+}
+
+audioPlayer.onended = () => playNextSong();
+
+// ==========================================
+// 3. 啟動與權限
+// ==========================================
+window.startApp = function() {
+  if (!handLandmarker) return;
+  if (!audioInitialized && CONFIG.musicList.length > 0) {
+      audioPlayer.src = CONFIG.musicList[0];
+      audioPlayer.volume = 0;
+      audioPlayer.play().then(() => {
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+          audioPlayer.volume = currentVolume;
+          audioInitialized = true;
+          console.log("Audio Unlocked");
+      }).catch(e => console.log("Unlock skipped:", e));
+  }
+  
+  // 響應式攝影機設定：使用 ideal 來適應不同裝置
+  const constraints = {
+      video: {
+          facingMode: "user",
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+      }
+  };
+
+  navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+    video.srcObject = stream;
+    video.addEventListener("loadeddata", predictWebcam);
+    document.getElementById("startBtn").style.display = "none"; 
+    document.getElementById("loading-text").innerText = "啟動成功！請比出 OK 手勢";
+    document.getElementById("loading-text").style.display = "block";
+  });
+}
+
+// ==========================================
+// 4. 偵測主迴圈
+// ==========================================
+async function predictWebcam() {
+  // 確保 Canvas 大小跟隨 Video 實際大小 (響應式關鍵)
+  if (video.videoWidth > 0 && canvasElement.width !== video.videoWidth) {
+      canvasElement.width = video.videoWidth;
+      canvasElement.height = video.videoHeight;
+  }
+  
+  if (frameCounter % (SKIP_FRAMES + 1) === 0) {
+      if (lastVideoTime !== video.currentTime) {
+        lastVideoTime = video.currentTime;
+        const startTimeMs = performance.now();
+        const results = handLandmarker.detectForVideo(video, startTimeMs);
+
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        
+        // 顯示防誤觸提示
+        if (Date.now() < pauseProtectionTime) {
+            protectionMsg.style.display = "block";
+        } else {
+            protectionMsg.style.display = "none";
+        }
+        
+        if (results.landmarks) {
+          for (const landmarks of results.landmarks) {
+            const gestureState = handleGestures(landmarks);
+            drawHand(landmarks, gestureState); 
+          }
+        }
+      }
+  }
+  frameCounter++;
+  window.requestAnimationFrame(predictWebcam);
+}
+
+// ==========================================
+// 5. 手勢判定邏輯 (含防誤觸)
+// ==========================================
+function handleGestures(lm) {
+    const now = Date.now();
+    let gestureType = "NORMAL"; 
+
+    const thumbTip = lm[4];
+    const indexTip = lm[8];
+    const middleTip = lm[12];
+    const ringTip = lm[16];
+    const pinkyTip = lm[20];
+    
+    const indexPip = lm[6].y;
+    const middlePip = lm[10].y;
+    const ringPip = lm[14].y;
+    const pinkyPip = lm[18].y;
+
+    const isIndexExt = indexTip.y < indexPip;
+    const isMiddleExt = middleTip.y < middlePip;
+    const isRingExt = ringTip.y < ringPip;
+    const isPinkyExt = pinkyTip.y < pinkyPip;
+
+    const distPinch = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
+
+    // --- 握拳 (暫停) ---
+    const isFist = (!isIndexExt && !isMiddleExt && !isRingExt && !isPinkyExt);
+    if (isFist) {
+        gestureType = "FIST";
+        // 🛡️ 防誤觸檢查
+        if (now < pauseProtectionTime) {
+            return gestureType; 
+        }
+
+        if (now - lastGestureTime > 800 && isPlaying) { 
+            audioPlayer.pause();
+            isPlaying = false;
+            updateStatusUI();
+            lastGestureTime = now;
+        }
+        return gestureType;
+    }
+
+    // --- 食指 (下一首) ---
+    const isIndexPoint = isIndexExt && !isMiddleExt && !isRingExt && !isPinkyExt;
+    if (isIndexPoint) {
+        gestureType = "INDEX";
+        if (now - lastGestureTime > 1500 && isPlaying) {
+            playNextSong();
+            pauseProtectionTime = now + 1000; // 切歌後也保護 1 秒
+            lastGestureTime = now;
+        }
+        return gestureType;
+    }
+
+    // --- OK (播放) ---
+    if (distPinch < 0.05 && isMiddleExt) {
+        gestureType = "OK";
+        if (now - lastGestureTime > 1000) {
+            if (!isPlaying) {
+                if (!audioPlayer.src) playNextSong(); 
+                else audioPlayer.play();
+                
+                isPlaying = true; 
+                updateStatusUI();
+                pauseProtectionTime = now + 2000; // 🛡️ 啟動播放時，保護 2 秒
+            }
+            lastGestureTime = now;
+        }
+        return gestureType;
+    }
+
+    // --- 音量 (手掌高度) ---
+    if (isPlaying && !isFist && !isIndexPoint && distPinch > 0.1) {
+        const palmY = lm[9].y;
+        let targetVol = 1 - palmY; 
+        targetVol = (targetVol - 0.2) * 1.6;
+        targetVol = Math.max(0, Math.min(1, targetVol));
+        smoothedVolume += (targetVol - smoothedVolume) * 0.1;
+        
+        if (Math.abs(currentVolume - smoothedVolume) > 0.01) {
+            currentVolume = smoothedVolume;
+            audioPlayer.volume = currentVolume;
+            document.getElementById("vol-display").innerText = Math.round(currentVolume * 100) + "%";
+        }
+    }
+    
+    return gestureType;
+}
+
+function updateStatusUI() {
+    const playStatus = document.getElementById("play-status");
+    const boxStatus = document.getElementById("box-status");
+    if (isPlaying) {
+        playStatus.innerText = "Playing ▶";
+        playStatus.style.color = "#00ff00";
+        boxStatus.style.borderColor = "#00ff00";
+    } else {
+        playStatus.innerText = "Paused ⏸";
+        playStatus.style.color = "#ff5555";
+        boxStatus.style.borderColor = "#ff5555";
+    }
+}
+
+// ==========================================
+// 6. 繪圖
+// ==========================================
+function drawHand(landmarks, gestureType) {
+    canvasCtx.lineWidth = 2;
+    let mainColor = "rgba(0, 255, 204, 0.6)"; 
+    let tipColor = "#00ffcc";
+    
+    if (gestureType === "OK") { mainColor = "rgba(0, 255, 0, 0.8)"; tipColor = "#00ff00"; }
+    if (gestureType === "FIST") { mainColor = "rgba(255, 85, 85, 0.8)"; tipColor = "#ff5555"; }
+    if (gestureType === "INDEX") { mainColor = "rgba(255, 204, 0, 0.8)"; tipColor = "#ffcc00"; }
+
+    const connections = [[0,1],[1,2],[2,3],[3,4], [0,5],[5,6],[6,7],[7,8], [5,9],[9,10],[10,11],[11,12], [9,13],[13,14],[14,15],[15,16], [13,17],[17,18],[18,19],[19,20], [0,17]];
+    
+    canvasCtx.strokeStyle = mainColor;
+    for (const [start, end] of connections) {
+        const p1 = landmarks[start];
+        const p2 = landmarks[end];
+        canvasCtx.beginPath();
+        canvasCtx.moveTo(p1.x * canvasElement.width, p1.y * canvasElement.height);
+        canvasCtx.lineTo(p2.x * canvasElement.width, p2.y * canvasElement.height);
+        canvasCtx.stroke();
+    }
+
+    for (let i = 0; i < landmarks.length; i++) {
+        const p = landmarks[i];
+        canvasCtx.beginPath();
+        canvasCtx.arc(p.x * canvasElement.width, p.y * canvasElement.height, i % 4 === 0 ? 5 : 3, 0, 2 * Math.PI);
+        canvasCtx.fillStyle = (i === 4 || i === 8) ? tipColor : mainColor;
+        canvasCtx.fill();
+    }
+}
+</script>
 </body>
 </html>
