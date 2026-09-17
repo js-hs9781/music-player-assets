@@ -109,6 +109,48 @@
     button:active { transform: scale(0.95); }
     
     #loading-text { color: #ffeb3b; font-weight: bold; font-size: 14px; display: none; text-align: center; }
+
+    /* 錯誤訊息 */
+    #error-box {
+      display: none; max-width: 420px; margin: 4px auto 0;
+      background: rgba(180, 30, 30, 0.15); border: 1px solid #b44;
+      color: #ffb4b4; border-radius: 10px; padding: 12px 16px;
+      font-size: 13px; line-height: 1.7; text-align: left;
+    }
+    #error-box b { color: #ff8a8a; }
+
+    /* 首次進站的說明卡 */
+    #intro {
+      max-width: 460px; margin: 0 auto 4px; text-align: center;
+      color: #cfd3d8; font-size: 13px; line-height: 1.8;
+    }
+    #intro-lead { margin: 0 0 14px; font-size: 15px; color: #e8ebee; }
+    #gesture-guide {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 8px; margin-bottom: 14px;
+    }
+    .guide-item {
+      background: rgba(255,255,255,0.05); border-radius: 10px;
+      padding: 8px 10px; font-size: 12px; text-align: left;
+      border-left: 3px solid #00ffcc;
+    }
+    .guide-item .g-emoji { font-size: 17px; margin-right: 6px; }
+    #privacy { margin: 0; font-size: 12px; color: #8b9199; }
+
+    /* 休息提醒畫面 */
+    #break-screen {
+      display: none; position: absolute; inset: 0; z-index: 40;
+      background: rgba(0, 20, 50, 0.88);
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 20px; box-sizing: border-box;
+    }
+    #break-screen.show { display: flex; }
+    .break-title {
+      font-size: clamp(22px, 6vw, 38px); font-weight: bold; color: #00ffcc;
+      text-shadow: 0 0 20px rgba(0,255,204,0.4); margin-bottom: 14px;
+    }
+    .break-sub { font-size: clamp(13px, 3.5vw, 17px); color: #fff; margin-bottom: 10px; }
+    .break-hint { font-size: clamp(12px, 3vw, 15px); color: #7CFC98; }
     
     /* 底部說明文字 */
     #instructions { 
@@ -148,9 +190,21 @@
 
   <h1>🎵 AI 手勢音樂播放器</h1>
   
+  <div id="intro">
+    <p id="intro-lead">用手勢控制音樂,不必碰鍵盤滑鼠。專注 25 分鐘後,它會提醒你起來休息。</p>
+    <div id="gesture-guide">
+      <div class="guide-item"><span class="g-emoji">👌</span>OK 手勢 — 播放</div>
+      <div class="guide-item"><span class="g-emoji">✊</span>握拳 — 暫停</div>
+      <div class="guide-item"><span class="g-emoji">☝️</span>比 1 — 下一首</div>
+      <div class="guide-item"><span class="g-emoji">🖐</span>手掌高低 — 音量</div>
+    </div>
+    <p id="privacy">🔒 影像只在你的瀏覽器裡運算,不會上傳到任何伺服器,也不會被儲存。</p>
+  </div>
+
   <div id="controls">
-    <button id="startBtn" onclick="startApp()">🔊 點此啟動體驗</button>
+    <button id="startBtn" onclick="startApp()">🎥 開啟攝影機開始體驗</button>
     <div id="loading-text">⏳ AI 模型載入中...</div>
+    <div id="error-box"></div>
   </div>
 
   <div id="container">
@@ -160,6 +214,12 @@
     
     <div id="protection-msg">🛡️ 防誤觸保護中...</div>
 
+    <div id="break-screen">
+      <div class="break-title">TIME'S UP!</div>
+      <div class="break-sub">已經專注 25 分鐘了,起來走走、看看遠方</div>
+      <div class="break-hint">休息夠了,比出 👌 繼續播放</div>
+    </div>
+
     <div id="overlay-ui">
       <div class="status-box" style="border-color: #ff5555;" id="box-status">
         <div class="label">Status</div>
@@ -168,6 +228,10 @@
       <div class="status-box" style="border-color: #00ffcc;">
         <div class="label">Volume</div>
         <div id="vol-display" class="big-text">50%</div>
+      </div>
+      <div class="status-box" style="border-color: #ff9800;">
+        <div class="label">Break in</div>
+        <div id="timer-display" class="big-text" style="font-size: 17px;">25:00</div>
       </div>
       <div class="status-box" style="border-color: #ffcc00;">
         <div class="label">Track</div>
@@ -213,6 +277,11 @@ let smoothedVolume = 0.5;
 let currentSongIndex = 0;
 let lastGestureTime = 0;
 let pauseProtectionTime = 0; // 防誤觸時間
+
+// 番茄鐘（與 Python 版一致：25 分鐘）
+const POMODORO_SECONDS = 25 * 60;
+let timerStart = 0;
+let isBreakTime = false;
 let audioInitialized = false;
 let frameCounter = 0;
 const SKIP_FRAMES = 2;
@@ -223,6 +292,8 @@ const canvasCtx = canvasElement.getContext("2d");
 const audioPlayer = document.getElementById("audioPlayer");
 const bgCover = document.getElementById("bg-cover");
 const protectionMsg = document.getElementById("protection-msg");
+const breakScreen = document.getElementById("break-screen");
+const timerDisplay = document.getElementById("timer-display");
 
 // 設定封面圖
 bgCover.src = CONFIG.coverUrl;
@@ -235,6 +306,32 @@ audioPlayer.addEventListener('error', function(e) {
     isPlaying = false;
     updateStatusUI();
 });
+
+// ==========================================
+// 0. 錯誤提示
+// ==========================================
+function showError(title, detail) {
+  const box = document.getElementById("error-box");
+  box.innerHTML = "<b>" + title + "</b><br>" + detail;
+  box.style.display = "block";
+  document.getElementById("loading-text").style.display = "none";
+}
+
+function describeCameraError(err) {
+  const name = err && err.name ? err.name : "";
+  if (name === "NotAllowedError" || name === "SecurityError") {
+    return ["攝影機權限被拒絕",
+      "這個網頁需要看到你的手才能辨識手勢。請點網址列左邊的鎖頭圖示 → 允許「攝影機」→ 重新整理頁面。"];
+  }
+  if (name === "NotFoundError" || name === "DevicesNotFoundError") {
+    return ["找不到攝影機", "你的裝置似乎沒有可用的鏡頭，或它正被其他程式佔用。"];
+  }
+  if (name === "NotReadableError" || name === "TrackStartError") {
+    return ["攝影機已被其他程式佔用",
+      "請先關閉 Zoom、Google Meet、FaceTime 等正在使用鏡頭的程式，再重新整理頁面。"];
+  }
+  return ["無法啟動攝影機", (err && err.message) ? err.message : "未知錯誤，請換一個瀏覽器再試。"];
+}
 
 // ==========================================
 // 1. 初始化 AI 模型
@@ -264,7 +361,10 @@ async function createHandLandmarker() {
     startBtn.disabled = false;
     startBtn.innerText = "🔊 點此啟動體驗";
   } catch (e) {
-    alert("AI 模型載入失敗: " + e);
+    startBtn.style.display = "none";
+    showError("AI 模型載入失敗",
+      "可能是網路不穩或瀏覽器版本太舊。請重新整理頁面，或改用最新版的 Chrome / Safari。");
+    console.error(e);
   }
 }
 createHandLandmarker();
@@ -291,10 +391,55 @@ function playNextSong() {
 audioPlayer.onended = () => playNextSong();
 
 // ==========================================
+// 2b. 番茄鐘與休息提醒
+// ==========================================
+function formatTime(sec) {
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+function enterBreak() {
+  isBreakTime = true;
+  audioPlayer.pause();
+  isPlaying = false;
+  breakScreen.classList.add("show");
+  timerDisplay.innerText = "休息中";
+  updateStatusUI();
+}
+
+function leaveBreak() {
+  isBreakTime = false;
+  breakScreen.classList.remove("show");
+  timerStart = Date.now();
+}
+
+// 每幀呼叫：推進番茄鐘並更新顯示
+function tickPomodoro() {
+  if (isBreakTime) return;
+  if (!isPlaying || timerStart === 0) return;
+
+  const remain = POMODORO_SECONDS - (Date.now() - timerStart) / 1000;
+  if (remain <= 0) {
+    enterBreak();
+    return;
+  }
+  timerDisplay.innerText = formatTime(remain);
+}
+
+// ==========================================
 // 3. 啟動與權限
 // ==========================================
 window.startApp = function() {
   if (!handLandmarker) return;
+
+  // 瀏覽器 / 連線環境檢查（getUserMedia 只在 https 或 localhost 下可用）
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showError("這個瀏覽器不支援攝影機存取",
+      "請改用最新版的 Chrome、Edge 或 Safari 開啟，並確認網址是 https 開頭。");
+    return;
+  }
   if (!audioInitialized && CONFIG.musicList.length > 0) {
       audioPlayer.src = CONFIG.musicList[0];
       audioPlayer.volume = 0;
@@ -320,8 +465,13 @@ window.startApp = function() {
     video.srcObject = stream;
     video.addEventListener("loadeddata", predictWebcam);
     document.getElementById("startBtn").style.display = "none"; 
-    document.getElementById("loading-text").innerText = "啟動成功！請比出 OK 手勢";
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("loading-text").innerText = "啟動成功！請比出 👌 開始播放";
     document.getElementById("loading-text").style.display = "block";
+  }).catch((err) => {
+    const [title, detail] = describeCameraError(err);
+    showError(title, detail);
+    console.error(err);
   });
 }
 
@@ -358,6 +508,7 @@ async function predictWebcam() {
         }
       }
   }
+  tickPomodoro();
   frameCounter++;
   window.requestAnimationFrame(predictWebcam);
 }
@@ -386,6 +537,21 @@ function handleGestures(lm) {
     const isPinkyExt = pinkyTip.y < pinkyPip;
 
     const distPinch = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
+
+    // 休息中：只接受 OK 手勢，其餘一律忽略
+    if (isBreakTime) {
+        const pinchDist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
+        if (pinchDist < 0.05 && isMiddleExt && now - lastGestureTime > 1000) {
+            leaveBreak();
+            if (!audioPlayer.src) playNextSong();
+            else audioPlayer.play();
+            isPlaying = true;
+            pauseProtectionTime = now + 2000;
+            lastGestureTime = now;
+            updateStatusUI();
+        }
+        return "OK";
+    }
 
     // --- 握拳 (暫停) ---
     const isFist = (!isIndexExt && !isMiddleExt && !isRingExt && !isPinkyExt);
@@ -426,6 +592,7 @@ function handleGestures(lm) {
                 else audioPlayer.play();
                 
                 isPlaying = true; 
+                if (timerStart === 0) timerStart = Date.now(); // 第一次播放才起算
                 updateStatusUI();
                 pauseProtectionTime = now + 2000; // 🛡️ 啟動播放時，保護 2 秒
             }
